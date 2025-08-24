@@ -1,0 +1,38 @@
+#root {
+  width: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+form {
+  border: 1px solid rgb(94, 94, 94);
+  border-radius: 10px;
+  padding: 20px;
+  width: 50%;
+}
+
+.item {
+  margin: 20px 0;
+}
+
+input {
+  margin-top: 5px;
+  padding: 6px 10px;
+  width: 100%;
+}
+
+button {
+  width: 100%;
+  background-color: rgb(53, 53, 255);
+  color: white;
+  border-radius: 10px;
+  border: none;
+  padding: 10px;
+}
+
+button:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}
