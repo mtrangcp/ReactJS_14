@@ -6,6 +6,7 @@ interface PropsType {
   id: number;
   onToggle: (id: number, checked: boolean) => void;
   onDelete: (id: number) => void;
+  onEdit: (id: number) => void;
 }
 
 export default class ItemTodo extends Component<PropsType> {
@@ -17,6 +18,10 @@ export default class ItemTodo extends Component<PropsType> {
 
   handleDelete = (): void => {
     this.props.onDelete(this.props.id);
+  };
+
+  handleEdit = (): void => {
+    this.props.onEdit(this.props.id);
   };
   render() {
     return (
@@ -34,7 +39,7 @@ export default class ItemTodo extends Component<PropsType> {
         )}
 
         <div className="todo-actions">
-          <button className="edit-btn" onClick={this.handleDelete}>
+          <button className="edit-btn" onClick={this.handleEdit}>
             ✎
           </button>
           <button className="delete-btn" onClick={this.handleDelete}>

@@ -317,3 +317,26 @@ body {
 .cancel-btn:hover {
   background-color: #757575;
 }
+
+.inputEdit {
+  padding: 7px;
+  margin-top: 10px;
+  width: 100%;
+  border-radius: 7px;
+}
+
+.all-completed {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.all-completed span {
+  color: #666;
+}
+
+.all-completed img {
+  width: 20px;
+  height: 20px;
+}

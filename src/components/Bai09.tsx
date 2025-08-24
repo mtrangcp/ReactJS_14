@@ -13,8 +13,12 @@ interface StateType {
   todos: Todo[];
   inputTodo: string;
   msg: string;
-  showModal: boolean;
+  showModalDelete: boolean;
+  showModalEdit: boolean;
   deleteId: number | null;
+  editId: number | null;
+  editValue: string;
+  editMsg: string;
 }
 
 export default class Bai09 extends Component<Record<string, never>, StateType> {
@@ -24,17 +28,22 @@ export default class Bai09 extends Component<Record<string, never>, StateType> {
       todos: JSON.parse(localStorage.getItem("todos") || "[]"),
       inputTodo: "",
       msg: "",
-      showModal: false,
+      showModalDelete: false,
+      showModalEdit: false,
       deleteId: null,
+      editId: null,
+      editValue: "",
+      editMsg: "",
     };
   }
 
+  // delete
   openDeleteModal = (id: number) => {
-    this.setState({ showModal: true, deleteId: id });
+    this.setState({ showModalDelete: true, deleteId: id });
   };
 
   cancelDelete = () => {
-    this.setState({ showModal: false, deleteId: null });
+    this.setState({ showModalDelete: false, deleteId: null });
   };
 
   confirmDelete = () => {
@@ -42,12 +51,58 @@ export default class Bai09 extends Component<Record<string, never>, StateType> {
       this.setState(
         {
           todos: this.state.todos.filter((el) => el.id !== this.state.deleteId),
-          showModal: false,
+          showModalDelete: false,
           deleteId: null,
         },
         () => localStorage.setItem("todos", JSON.stringify(this.state.todos))
       );
     }
+  };
+
+  // edit
+  openEditModal = (id: number) => {
+    const todo = this.state.todos.find((el) => el.id === id);
+    this.setState({
+      showModalEdit: true,
+      editId: id,
+      editValue: todo ? todo.content : "",
+      editMsg: "",
+    });
+  };
+
+  cancelEdit = () => {
+    this.setState({
+      showModalEdit: false,
+      editId: null,
+      editValue: "",
+      editMsg: "",
+    });
+  };
+
+  confirmEdit = () => {
+    const { editId, editValue, todos } = this.state;
+
+    if (!editValue.trim()) {
+      this.setState({ editMsg: "Tên công việc không được để trống" });
+      return;
+    }
+    if (todos.some((el) => el.content === editValue && el.id !== editId)) {
+      this.setState({ editMsg: "Tên công việc không được trùng" });
+      return;
+    }
+
+    this.setState(
+      {
+        todos: todos.map((el) =>
+          el.id === editId ? { ...el, content: editValue } : el
+        ),
+        showModalEdit: false,
+        editId: null,
+        editValue: "",
+        editMsg: "",
+      },
+      () => localStorage.setItem("todos", JSON.stringify(this.state.todos))
+    );
   };
 
   render() {
@@ -145,6 +200,9 @@ export default class Bai09 extends Component<Record<string, never>, StateType> {
                   onDelete={(id) => {
                     this.openDeleteModal(id);
                   }}
+                  onEdit={(id) => {
+                    this.openEditModal(id);
+                  }}
                 ></ItemTodo>
               );
             })}
@@ -153,7 +211,8 @@ export default class Bai09 extends Component<Record<string, never>, StateType> {
 
         <FooterBai09 todos={this.state.todos}></FooterBai09>
 
-        {this.state.showModal && (
+        {/* Modal Xóa */}
+        {this.state.showModalDelete && (
           <div className="modal-overlay">
             <div className="modal-box">
               <h3>Xác nhận</h3>
@@ -169,6 +228,30 @@ export default class Bai09 extends Component<Record<string, never>, StateType> {
                   Đồng ý
                 </button>
                 <button onClick={this.cancelDelete} className="cancel-btn">
+                  Hủy
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {this.state.showModalEdit && (
+          <div className="modal-overlay">
+            <div className="modal-box">
+              <h3>Cập nhật công việc</h3>
+              <input
+                className="inputEdit"
+                type="text"
+                value={this.state.editValue}
+                onChange={(e) => this.setState({ editValue: e.target.value })}
+                maxLength={100}
+              />
+              <div className="error-message">{this.state.editMsg}</div>
+              <div className="modal-actions">
+                <button onClick={this.confirmEdit} className="confirm-btn">
+                  Đồng ý
+                </button>
+                <button onClick={this.cancelEdit} className="cancel-btn">
                   Hủy
                 </button>
               </div>
